@@ -1,0 +1,3 @@
+C:/Users/XPRISTO/StudioProjects/check_list_stress/windows/out/build/x64-Debug/pdfium-download/CMakeFiles/pdfium-download.dir
+C:/Users/XPRISTO/StudioProjects/check_list_stress/windows/out/build/x64-Debug/pdfium-download/CMakeFiles/edit_cache.dir
+C:/Users/XPRISTO/StudioProjects/check_list_stress/windows/out/build/x64-Debug/pdfium-download/CMakeFiles/rebuild_cache.dir
