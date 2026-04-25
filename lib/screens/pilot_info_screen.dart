@@ -507,6 +507,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import '../theme/app_theme_colors.dart';
 import 'flight_plan.dart';
 
+
 class PilotInfo {
   final String     pilotName, flightNumber, aircraftType, airline;
   final DateTime   departureTime;
@@ -724,7 +725,9 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
           title: Text(
             ar ? 'بيانات الطيار والرحلة' : 'PILOT & FLIGHT INFO',
             style: GoogleFonts.shareTechMono(
-                fontSize: 14, letterSpacing: 1, color: AppThemeColors.cyan),
+                fontSize: 18, letterSpacing: 1, color: AppThemeColors.cyan,
+                fontWeight: FontWeight.w700
+            ),
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1),
@@ -758,9 +761,10 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
                             : 'Enter pilot & flight details — shown in final report & PDF.',
                         textAlign: ar ? TextAlign.right : TextAlign.left,
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 13,
                             color:    c.textSecondary,
-                            height:   1.4),
+                            height:   1.2,
+                        fontWeight: FontWeight.w600),
                       ),
                     ),
                   ]),
@@ -822,7 +826,8 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
                     ar
                         ? 'اضغط لاختيار صورة (اختياري)'
                         : 'Tap to add photo (optional)',
-                    style: TextStyle(fontSize: 10, color: c.textTertiary),
+                    style: TextStyle(fontSize: 12, color: c.textTertiary,
+                    fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -836,26 +841,31 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
                 _field(_name,
                     ar ? 'اسم الطيار الكامل' : 'Full Pilot Name',
                     ar ? 'CAPT. محمد' : 'CAPT. JOHN SMITH',
-                    Icons.badge_outlined, ar, c),
+                    Icons.badge_outlined, ar, c,
+                TextInputType.name),
                 const SizedBox(height: 12),
 
                 _field(_age, ar ? 'العمر' : 'Age',
-                    '50', Icons.calendar_today, ar, c),
+                    '50', Icons.calendar_today, ar, c,
+                TextInputType.number),
                 const SizedBox(height: 12),
 
                 _field(_aviHours,
                     ar ? 'عدد ساعات الطيران' : 'Aviation Hours',
-                    '5000', Icons.hourglass_top_outlined, ar, c),
+                    '5000', Icons.hourglass_top_outlined, ar, c,
+                TextInputType.number),
                 const SizedBox(height: 12),
 
                 _field(_license, ar ? 'رقم الرخصة' : 'License Number',
-                    'LIC-123456', Icons.card_membership_rounded, ar, c),
+                    'LIC-123456', Icons.card_membership_rounded, ar, c,
+                TextInputType.text),
                 const SizedBox(height: 12),
 
                 _field(_airline,
                     ar ? 'شركة الطيران' : 'Home Base Airport',
                     ar ? 'مصر للطيران' : 'HECA',
-                    Icons.location_on_rounded, ar, c),
+                    Icons.location_on_rounded, ar, c,
+                TextInputType.text),
                 const SizedBox(height: 14),
 
                 Text(
@@ -959,14 +969,17 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
         const SizedBox(width: 6),
         Text(title,
             style: GoogleFonts.shareTechMono(
-                fontSize: 10,
+                fontSize: 13,
                 color:    AppThemeColors.cyan,
-                letterSpacing: 2)),
+                letterSpacing: 1,
+            fontWeight: FontWeight.w600)),
         const SizedBox(width: 8),
         Expanded(child: Container(height: 0.5, color: c.border)),
       ]);
 
   // ── Text field ─────────────────────────────────────────────
+
+
   Widget _field(
       TextEditingController ctrl,
       String label,
@@ -974,39 +987,33 @@ class _PilotInfoScreenState extends State<PilotInfoScreen> {
       IconData icon,
       bool ar,
       AppThemeColors c,
+      TextInputType type,
       ) =>
       TextFormField(
-        controller:            ctrl,
-        textCapitalization:    TextCapitalization.characters,
+        controller: ctrl,
+        keyboardType: type,
+
+        // 🔥 إجبار منع أي input غير الأرقام
+        inputFormatters: type == TextInputType.number
+            ? <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ]
+            : null,
+
         style: GoogleFonts.shareTechMono(
             fontSize: 13, color: c.textPrimary),
+
         validator: (v) =>
         (v == null || v.trim().isEmpty)
             ? (ar ? 'مطلوب' : 'Required')
             : null,
+
         decoration: InputDecoration(
-          labelText:  label,
-          hintText:   hint,
+          labelText: label,
+          hintText: hint,
           prefixIcon: Icon(icon, size: 18, color: AppThemeColors.cyan),
-          labelStyle: TextStyle(fontSize: 11, color: c.textPrimary),
-          hintStyle:  TextStyle(fontSize: 11, color: c.textTertiary),
-          filled:     true,
-          fillColor:  c.elevated,
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14, vertical: 14),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:   BorderSide(color: c.border)),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:   BorderSide(color: c.border)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
-                  color: AppThemeColors.cyan, width: 1.5)),
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppThemeColors.red)),
+          filled: true,
+          fillColor: c.elevated,
         ),
       );
 
